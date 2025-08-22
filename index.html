@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreativeFlow - AI-Powered Design Collaboration Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --accent-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --success-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --warning-gradient: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+            
+            --dark-bg: #0a0a0f;
+            --dark-surface: #1a1a2e;
+            --dark-card: #16213e;
+            --neon-blue: #00d4ff;
+            --neon-purple: #b537ff;
+            --neon-pink: #ff006e;
+            --neon-green: #39ff14;
+            
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0ab;
+            --text-muted: #6b7280;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--dark-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--dark-surface);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-gradient);
+            border-radius: 4px;
+        }
+
+        /* Navigation */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+            padding: 1rem 0;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-menu a:hover {
+            color: var(--text-primary);
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -8px;
+            left: 0;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu a:hover::after {
+            width: 100%;
+        }
+
+        .nav-cta {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .btn-primary {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: 0.7rem 1.5rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding: 8rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 30% 20%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 70% 80%, rgba(181, 55, 255, 0.3) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .hero-badge {
+            display: inline-block;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .hero-title {
+            font-size: clamp(3rem, 8vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            margin-bottom: 2rem;
+            background: linear-gradient(135deg, #ffffff 0%, #667eea 50%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            line-height: 1.6;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 3rem;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-hero {
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+        }
+
+        .btn-hero.primary {
+            background: var(--primary-gradient);
+            color: white;
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-hero.primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.6);
+        }
+
+        .btn-hero.secondary {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+        }
+
+        .btn-hero.secondary:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .hero-demo {
+            position: relative;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .demo-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: var(--glass-shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .demo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--primary-gradient);
+        }
+
+        .demo-interface {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .demo-sidebar {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 1.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .demo-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .demo-item:hover {
+            background: rgba(102, 126, 234, 0.2);
+        }
+
+        .demo-item.active {
+            background: var(--primary-gradient);
+        }
+
+        .demo-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            background: var(--success-gradient);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
+
+        .demo-canvas {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            min-height: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .demo-canvas::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100px;
+            height: 100px;
+            background: var(--primary-gradient);
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 6rem 0;
+            position: relative;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-badge {
+            display: inline-block;
+            background: var(--accent-gradient);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #ffffff 0%, #667eea 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .section-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .feature-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 2.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-gradient);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: white;
+        }
+
+        .feature-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .feature-description {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 0;
+            background: var(--dark-surface);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item {
+            padding: 1rem;
+        }
+
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: 0.5rem;
+        }
+
+        /* CTA Section */
+        .cta {
+            padding: 6rem 0;
+            text-align: center;
+            position: relative;
+        }
+
+        .cta::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(181, 55, 255, 0.2) 0%, transparent 70%);
+            z-index: -1;
+        }
+
+        .cta-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .cta-title {
+            font-size: clamp(2.5rem, 5vw, 3.5rem);
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #ffffff 0%, #b537ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .cta-subtitle {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--dark-card);
+            padding: 3rem 0 1rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .footer-section h3 {
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-section a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            display: block;
+            margin-bottom: 0.5rem;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section a:hover {
+            color: var(--text-primary);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+        }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 0.3; }
+            50% { transform: translate(-50%, -50%) scale(1.1); opacity: 0.5; }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(102, 126, 234, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(102, 126, 234, 0.8); }
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero-cta, .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .demo-interface {
+                grid-template-columns: 1fr;
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-container, .container {
+                padding: 0 1rem;
+            }
+        }
+
+        /* Scroll animations */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">CreativeFlow</div>
+            <ul class="nav-menu">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#pricing">Pricing</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+            <div class="nav-cta">
+                <a href="#" class="btn-ghost">Sign In</a>
+                <a href="#" class="btn-primary">Start Free Trial</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <div class="hero-badge">
+                    🚀 Now with AI-powered design suggestions
+                </div>
+                <h1 class="hero-title">Design. Collaborate. Ship.</h1>
+                <p class="hero-subtitle">
+                    The only design platform your creative team needs. AI-powered workflows, 
+                    real-time collaboration, and seamless handoffs that actually work.
+                </p>
+                <div class="hero-cta">
+                    <a href="#" class="btn-hero primary">Start Creating Free</a>
+                    <a href="#" class="btn-hero secondary">Watch Demo</a>
+                </div>
+                
+                <div class="hero-demo">
+                    <div class="demo-card">
+                        <div class="demo-interface">
+                            <div class="demo-sidebar">
+                                <div class="demo-item active">
+                                    <div class="demo-icon">🎨</div>
+                                    <span>AI Design Assistant</span>
+                                </div>
+                                <div class="demo-item">
+                                    <div class="demo-icon">👥</div>
+                                    <span>Team Collaboration</span>
+                                </div>
+                                <div class="demo-item">
+                                    <div class="demo-icon">⚡</div>
+                                    <span>Smart Workflows</span>
+                                </div>
+                                <div class="demo-item">
+                                    <div class="demo-icon">🔄</div>
+                                    <span>Version Control</span>
+                                </div>
+                            </div>
+                            <div class="demo-canvas">
+                                <span style="z-index: 1; font-weight: 600; color: var(--text-secondary);">Interactive Demo</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features">
+        <div class="container">
+            <div class="section-header fade-in">
+                <div class="section-badge">FEATURES</div>
+                <h2 class="section-title">Everything you need to create</h2>
+                <p class="section-subtitle">
+                    Powerful tools that adapt to your workflow, not the other way around
+                </p>
+            </div>
+            
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">AI Design Assistant</h3>
+                    <p class="feature-description">
+                        Get intelligent suggestions, auto-generate layouts, and optimize designs with 
+                        our cutting-edge AI that understands your brand and preferences.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Real-time Collaboration</h3>
+                    <p class="feature-description">
+                        Work together seamlessly with live cursors, instant comments, and synchronized 
+                        editing that keeps your entire team in perfect sync.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Smart Asset Management</h3>
+                    <p class="feature-description">
+                        Organize, tag, and find your assets instantly with AI-powered search and 
+                        automatic categorization that scales with your library.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">Version Control</h3>
+                    <p class="feature-description">
+                        Never lose work again with automatic versioning, branching, and merge 
+                        capabilities designed specifically for creative workflows.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Cross-platform Sync</h3>
+                    <p class="feature-description">
+                        Access your projects anywhere with native apps for desktop, web, and mobile 
+                        that keep everything synchronized in real-time.
+                    </p>
+                </div>
+
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🚀</div>
+                    <h3 class="feature-title">One-click Handoffs</h3>
+                    <p class="feature-description">
+                        Generate perfect specs, export assets, and share interactive prototypes 
+                        with developers in formats they actually want to use.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item fade-in">
+                    <span class="stat-number">50K+</span>
+                    <div class="stat-label">Creative Teams</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <span class="stat-number">2M+</span>
+                    <div class="stat-label">Projects Created</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <span class="stat-number">99.9%</span>
+                    <div class="stat-label">Uptime</div>
+                </div>
+                <div class="stat-item fade-in">
+                    <span class="stat-number">150+</span>
+                    <div class="stat-label">Countries</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta">
+        <div class="container">
+            <div class="cta-content fade-in">
+                <h2 class="cta-title">Ready to transform your creative workflow?</h2>
+                <p class="cta-subtitle">
+                    Join thousands of teams already creating faster, better, and more collaboratively with CreativeFlow.
+                </p>
+                <div class="cta-buttons">
+                    <a href="#" class="btn-hero primary">Start Your Free Trial</a>
+                    <a href="#" class="btn-hero secondary">Schedule a Demo</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>CreativeFlow</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1rem;">
+                        The AI-powered design collaboration platform that creative teams love.
+                    </p>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Product</h3>
+                    <a href="#">Features</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">API</a>
+                    <a href="#">Integrations</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Company</h3>
+                    <a href="#">About</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Blog</a>
+                    <a href="#">Press</a>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Support</h3>
+                    <a href="#">Help Center</a>
+                    <a href="#">Community</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Status</a>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>© 2024 CreativeFlow. All rights reserved. Built with innovation and creativity.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        // Observe all fade-in elements
+        document.querySelectorAll('.fade-in').forEach(el => {
+            observer.observe(el);
+        });
+
+        // Interactive demo
+        const demoItems = document.querySelectorAll('.demo-item');
+        const demoCanvas = document.querySelector('.demo-canvas');
+
+        demoItems.forEach((item, index) => {
+            item.addEventListener('click', () => {
+                // Remove active class from all items
+                demoItems.forEach(i => i.classList.remove('active'));
+                // Add active class to clicked item
+                item.classList.add('active');
+                
+                // Change demo canvas content based on selection
+                const demos = [
+                    { content: '🤖 AI suggests optimized layouts and color schemes in real-time', gradient: 'var(--primary-gradient)' },
+                    { content: '👥 See live cursors and collaborate with your team instantly', gradient: 'var(--success-gradient)' },
+                    { content: '⚡ Automated workflows reduce repetitive tasks by 80%', gradient: 'var(--warning-gradient)' },
+                    { content: '🔄 Track every change with intelligent version history', gradient: 'var(--accent-gradient)' }
+                ];
+                
+                const demo = demos[index];
+                demoCanvas.innerHTML = `
+                    <div style="text-align: center; z-index: 2; max-width: 300px;">
+                        <div style="font-size: 2rem; margin-bottom: 1rem;">${demo.content.split(' ')[0]}</div>
+                        <p style="color: var(--text-secondary); font-weight: 500;">${demo.content.substring(2)}</p>
+                    </div>
+                `;
+                
+                // Update the pulse animation color
+                const pulseElement = demoCanvas.querySelector('::before');
+                demoCanvas.style.setProperty('--demo-gradient', demo.gradient);
+            });
+        });
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', () => {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 100) {
+                navbar.style.background = 'rgba(10, 10, 15, 0.95)';
+                navbar.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+            } else {
+                navbar.style.background = 'rgba(10, 10, 15, 0.8)';
+                navbar.style.boxShadow = 'none';
+            }
+        });
+
+        // Counter animation for stats
+        const animateCounter = (el, target) => {
+            let current = 0;
+            const increment = target / 100;
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    current = target;
+                    clearInterval(timer);
+                }
+                
+                if (target >= 1000000) {
+                    el.textContent = (current / 1000000).toFixed(1) + 'M+';
+                } else if (target >= 1000) {
+                    el.textContent = (current / 1000).toFixed(0) + 'K+';
+                } else {
+                    el.textContent = current.toFixed(1) + '%';
+                }
+            }, 20);
+        };
+
+        // Animate stats when they come into view
+        const statsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const number = entry.target.querySelector('.stat-number');
+                    const text = number.textContent;
+                    
+                    if (text.includes('K')) {
+                        animateCounter(number, parseFloat(text) * 1000);
+                    } else if (text.includes('M')) {
+                        animateCounter(number, parseFloat(text) * 1000000);
+                    } else if (text.includes('%')) {
+                        animateCounter(number, parseFloat(text));
+                    }
+                    
+                    statsObserver.unobserve(entry.target);
+                }
+            });
+        });
+
+        document.querySelectorAll('.stat-item').forEach(item => {
+            statsObserver.observe(item);
+        });
+
+        // Add some interactive hover effects
+        document.querySelectorAll('.feature-card').forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px) scale(1.02)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+
+        // Button click effects
+        document.querySelectorAll('.btn-primary, .btn-hero.primary').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = btn.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.cssText = `
+                    position: absolute;
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${x}px;
+                    top: ${y}px;
+                    background: rgba(255, 255, 255, 0.3);
+                    border-radius: 50%;
+                    transform: scale(0);
+                    animation: ripple 0.6s ease-out;
+                    pointer-events: none;
+                `;
+                
+                btn.style.position = 'relative';
+                btn.style.overflow = 'hidden';
+                btn.appendChild(ripple);
+                
+                setTimeout(() => ripple.remove(), 600);
+                
+                // Show demo alert
+                setTimeout(() => {
+                    alert('🚀 Demo: This would start your free trial! \n\nIn a real app, this would:\n• Create your account\n• Set up your workspace\n• Start the onboarding flow\n• Give you access to all features');
+                }, 100);
+            });
+        });
+
+        // Add CSS for ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes ripple {
+                from {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: scale(2);
+                    opacity: 0;
+                }
+            }
+            
+            .demo-canvas::before {
+                background: var(--demo-gradient, var(--primary-gradient));
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Initialize demo with first item
+        if (demoItems.length > 0) {
+            demoItems[0].click();
+        }
+
+        // Add scroll-triggered animations for a more dynamic feel
+        window.addEventListener('scroll', () => {
+            const scrolled = window.pageYOffset;
+            const parallax = document.querySelector('.hero::before');
+            
+            if (parallax) {
+                const speed = scrolled * 0.5;
+                parallax.style.transform = `translateY(${speed}px)`;
+            }
+        });
+    </script>
+</body>
+</html>
